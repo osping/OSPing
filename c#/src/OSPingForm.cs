@@ -15,7 +15,6 @@ namespace OSPing
     {
         private DataGridViewAdapter<PingResult> adapter;
 
-        private static int[] EXCLUDE_WORLDS = new int[] { 7, 15, 23, 24, 31, 32, 39, 40, 47, 48, 55, 56, 63, 64, 71, 72, 79, 80, 87, 88, 89, 90, 91, 92 };
         private const int HIGHEST_WORLD = 94;
 
         public OSPingForm()
@@ -42,14 +41,18 @@ namespace OSPing
             {
                 for (int i = 1; i < HIGHEST_WORLD; i++)
                 {
-                    if (!EXCLUDE_WORLDS.Contains(i))
+                    try
                     {
-                        pingReply = ping.Send("oldschool" + i + ".runescape.com", 500);
+                        pingReply = ping.Send("oldschool" + i + ".runescape.com", 1000);
 
                         if (pingReply.Status == IPStatus.Success)
                         {
                             results.Add(new PingResult(i, pingReply.RoundtripTime));
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        // continue - world doesn't exist
                     }
                 }
             });
